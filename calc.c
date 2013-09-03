@@ -70,7 +70,7 @@ nodebug root void read()
 {
   int i, n;
   
-  for(n=0; n<250; ++n)
+  for(n=0; n<200; ++n)
   {
     val_a= RdPortI(PADR);
     val_b= RdPortI(PBDR);
