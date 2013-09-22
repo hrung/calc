@@ -1,0 +1,151 @@
+This is a machine generated file.
+Modifications by hand must be made carefully at one's own risk.
+Deleting an entry will result in factory default for that entry.
+----------------------------------------------------------------
+
+[COMM]
+port=1
+coldload baud=2400
+pilot baud=57600
+bios baud=115200
+Max Negotiated Baud=115200
+stop bits=2
+use TCP=0
+TCP Port=0
+TCP Name=
+Net Address=
+Serial Response Timeout=400
+Ethernet Response Timeout=8000
+Serial Retry Count=5
+Ethernet Retry Count=0
+Serial Poll Interval=3000
+Ethernet Poll Interval=30000
+Verify DSR=1
+Use USB to Serial Converter=1
+Disable Baud Negotiation=0
+USB to Serial Delay=2000
+Pilot Bios Physical Address=0x4000
+Flash erase timeout=10000
+RS Console newline=\r\n
+RS Console greeting msg=220 Z-World RabbitSys Console
+RS Console username prompt=Username:
+RS Console password msg=331 Password required
+RS Console password prompt=Password:
+RS Console logged in msg=230 User logged in.
+RS Console bad uname msg=530 Bad Username/Password
+RS Console prompt=CON:
+RS Console targetmd command=targetmd
+RS Console targetmd msg=200 targetmd
+RS Console User Name=
+RS Console Password=
+Use RabbitLink=0
+RabbitLink Port=0
+RabbitLink Address=
+RabbitLink Name=
+Use RabbitSys=1
+RabbitSys Port=32023
+RabbitSys Address=
+[Compiler Options]
+Max Errors Shown=10
+Max Warnings Shown=10
+All Serious None=A
+RTC Indices=0
+RTC Pointers=0
+Optimize For Size=0
+Prototypes=1
+Demotion=1
+Pointers=1
+BIOS Memory Mode=0
+Restrict Watch Expressions=1
+Separate Instruction and Data=0
+Generate List Files=0
+Inline Internal IO Functions=1
+Default Compile Mode=0
+RabbitSys Protected IO=0
+RabbitSys Manual Detect=0
+RabbitSys Mode=0
+RabbitSys system binary=C:\DCRABBIT_9.62\Applications\RabbitSys\FastRAM\system.bin
+RabbitSys RFU path=C:\DCRABBIT_9.62\utilities\clrfu.exe
+[Debug Options]
+Enable Breakpoints=1
+Enable Instruction Level Single Step=1
+Enable Watch Expressions=1
+Max Breakpoints=32
+Max Watch Expressions=8
+Watch Memory for Structs=512
+Enable Tracing=0
+Trace Buf Size=8
+Enable Trace Buf Wrap=0
+Trace Statements=1
+Enable Trace RST=1
+Enable Trace Functions=1
+Enable Trace Auto Save=0
+Trace Auto Save File=
+Trace Info Func=1
+Trace Info Action=1
+Trace Info Time=1
+Trace Info File=1
+Trace Info Line/Col=1
+Trace Info Repeat=0
+Trace Info Reg=1
+Enable Stack Tracing=1
+Stack Tracing Memory=4096
+Enable debug kernel=1
+[Include RST 28]
+Include RST=1
+[Include BIOS]
+Include BIOS=1
+[Poll Target]
+Poll target while running=1
+[Targetless Compile]
+Board ID=0x1e00
+CPU ID=3000
+CPU Revision=1
+Crystal Speed MHz=11.0592
+RAM Size KBytes=512
+Flash Size KBytes=512
+Description=22MHz RCM3600, 512K SRAM, 512K Flash
+[Output File]
+Auto open STDIO=1
+Append=0
+Log STDIO=0
+Output File Name=DC.OUT
+[Dynamic C Files]
+Use Lib File=0
+Use BIOS File=0
+Use Default Source File=0
+LIB File=H:\rabbit\calc\LIB.DIR
+BIOS File=
+Cold Loader File=bios\coldload.bin
+Pilot BIOS File=bios\pilot.bin
+Default Source File=
+Start Dir=C:\DCRABBIT_9.62\
+[DEFINES]
+Defines=
+[Compression Utility]
+Zimport External Utility=ZCOMPRESS.EXE
+[MRU Files]
+FileCount=0
+[Open Files]
+Number Open=1
+[OpenFile  1]
+OpenFile  1 Path=H:\rabbit\calc\calc.c
+OpenFile  1 X=39
+OpenFile  1 Y=14
+OpenFile  1 W=715
+OpenFile  1 H=746
+OpenFile  1 Top Row=78
+OpenFile  1 Top Col=0
+OpenFile  1 WindowState=0
+OpenFile  1 Cursor Row=118
+OpenFile  1 Cursor Col=12
+[MRU 1]
+MRU 1 Path=H:\rabbit\calc\calc.c
+MRU 1 X=39
+MRU 1 Y=14
+MRU 1 W=715
+MRU 1 H=746
+MRU 1 Top Row=50
+MRU 1 WindowState=0
+MRU 1 Cursor Row=90
+MRU 1 Cursor Col=20
