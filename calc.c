@@ -36,154 +36,93 @@ typedef char bool;
 #define true  1
 
 ///////////////////////////////////////////////////////////////////////////////
+nodebug root void sleep(unsigned len)
+{
+    static unsigned long time;
+
+    time= MS_TIMER;
+
+    if(ULONG_MAX-len<time)
+        while(MS_TIMER>=time) continue; // wait for MS_TIMER to overlap
+
+    time+= len;
+    while(MS_TIMER<time) continue;
+};
+
+///////////////////////////////////////////////////////////////////////////////
 char* sym[8][8];
 
 ///////////////////////////////////////////////////////////////////////////////
-struct input
-{
-  bool state;
-  bool ready;
+byte row_val, column_val;
+byte row_idx, column_idx;
 
-  byte count;
-  byte tally;
-}
-input_a[8], input_b[8], *pa, *pb;
-
-byte val_a, val_b;
-byte bit_a, bit_b;
+bool sent;
 
 ///////////////////////////////////////////////////////////////////////////////
 nodebug root void setup()
 {
-  set(sym[0],   "9", "X",  "*",  "1",  "5",  " ", "X", "+-");
-  set(sym[1],   "X", "X",  "X",  "X",  "X",  "X", "X",  "X");
-  set(sym[2],   ".", "X",  " ",  "3",  "7",  " ", "X",  " ");
-  set(sym[3],   "0", "X", "00",  "2",  "6",  "L", "X", "CE");
-  set(sym[4], "mul", "X", "GT", "M+",  "#",  " ", "X",  " ");
-  set(sym[5],   "+", "X",  ">",  "4",  "8",  " ", "X",  " ");
-  set(sym[6],   "-", "X", "T-", "M#", "M*", "T+", "X",  " ");
-  set(sym[7], "div", "X", "MU", "M-",  "%",  " ", "X",  " ");
-}
-
-///////////////////////////////////////////////////////////////////////////////
-nodebug root void read()
-{
-  int i, n;
-  
-  for(n=0; n<200; ++n)
-  {
-    val_a= RdPortI(PADR);
-    val_b= RdPortI(PBDR);
-
-    for(i=0, pa=input_a, pb=input_b; i<8; ++i, ++pa, ++pb)
-    {
-      bit_a= val_a&1;
-      bit_b= val_b&1;
-    
-      if(bit_a != pa->state)
-      {
-	pa->state= bit_a;
-	++(pa->count);
-      }
-	
-      if(bit_b != pb->state)
-      {
-	pb->state= bit_b;
-	++(pb->count);
-      }
-
-      val_a= val_a>>1;
-      val_b= val_b>>1;
-    }
-  }
-
-  for(i=0, pa=input_a, pb=input_b; i<8; ++i, ++pa, ++pb)
-  {
-    if(pa->count)
-    {
-      ++(pa->tally);
-      pa->count=0;
-    }
-    else
-    {
-      pa->tally=0;
-      pa->ready= true;
-    }
-
-    if(pb->count)
-    {
-      ++(pb->tally);
-      pb->count=0;
-    }
-    else
-    {
-      pb->tally=0;
-      pb->ready= true;
-    }
-  }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-nodebug root void output()
-{
-  byte i, x, y;
-
-  x=8;
-  for(i=0, pa=input_a; i<8; ++i, ++pa)
-    if(pa->tally>1 && pa->ready)
-    {
-      x=i;
-      pa->ready= false;
-      break;
-    }
-  if(x==8) return; // wtf!?
-
-  y=8;
-  for(i=0, pb=input_b; i<8; ++i, ++pb)
-    if(pb->tally>1 && pb->ready)
-    {
-      y=i;
-      pb->ready= false;
-      break;
-    }
-  if(y==8) return; // wtf!?
-
-#ifdef DEBUG
-  printf(sym[x][y]);
-#endif
-  
-  serDputs(sym[x][y]);
+  set(sym[0],  "+", "X",  "*", "00",  ".",  "CE", "X",  "0");
+  set(sym[1],  "X", "X",  "X",  "X",  "X",   "X", "X",  "X");
+  set(sym[2],  "-", "X", "M+",  "5",  "6",   "=", "X",  "4");
+  set(sym[3],  "X", "X",  "#",  "2",  "3", "mul", "X",  "1");
+  set(sym[4], "M*", "X", "MU", "SE", "MA",  "+-", "X", "CO");
+  set(sym[5],  "%", "X", "M-",  "8",  "9", "div", "X",  "7");
+  set(sym[6],  "X", "X",  "X",  "X",  "X",   "X", "X", "FE");
+  set(sym[7], "T-", "X", "T+", "TC",  "~",   ">", "X", "CA");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 root void main()
 {
-  byte i;
-
   brdInit();
   WrPortM(SPCR,  0x80); // set PA as input
   WrPortM(PBDDR, 0x42); // set PB0,2-5,7 as inputs
   WrPortM(SBCR,  0x00);
-  
-  setup();
 
-  // reset inputs
-  for(i=0, pa=input_a, pb=input_b; i<8; ++i, ++pa, ++pb)
-  {
-    pa->ready= true;
-    pa->count=0;
-    pa->tally=0;
-    
-    pb->ready= true;
-    pb->count=0;
-    pb->tally=0;
-  }
-  
+  setup();
+  sent= false;
+
   serDopen(9600);
 
   while(true)
   {
-    read();
-    output();
+       row_val= ~(RdPortI(PADR) | 0x02);
+    column_val= ~(RdPortI(PBDR) | 0x42);
+
+#ifdef DEBUG
+    printf("%2x %2x\r", row_val, column_val);
+#endif
+
+    for(row_idx=0; row_idx<8; ++row_idx)
+    {
+      if(row_val&1) goto row_got;
+
+      row_val= row_val >> 1;
+    }
+
+row_got:
+    for(column_idx=0; column_idx<8; ++column_idx)
+    {
+      if(column_val&1) goto column_got;
+
+      column_val= column_val >> 1;
+    }
+
+column_got:
+    if(!sent && column_idx<8 && row_idx<8)
+    {
+#ifdef DEBUG
+      printf(sym[row_idx][column_idx]);
+#endif
+      serDputs(sym[row_idx][column_idx]);
+
+      sleep(30);
+      sent= true;
+    }
+    else if(column_idx==8 && row_idx==8)
+    {
+      sleep(30);
+      sent= false;
+    }
   }
 }
