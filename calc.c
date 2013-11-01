@@ -116,12 +116,12 @@ column_got:
 #endif
       serDputs(sym[row_idx][column_idx]);
 
-      sleep(30);
+      sleep(70);
       sent= true;
     }
     else if(column_idx==8 && row_idx==8)
     {
-      sleep(30);
+      sleep(70);
       sent= false;
     }
   }
